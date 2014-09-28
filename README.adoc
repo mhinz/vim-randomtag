@@ -1,0 +1,7 @@
+=== What is this madness?
+
+Learn something new about Vim every day by jumping to random tags from help files!
+
+=== Amazing! How do I use it?
+
+Easy-peasy! Just run `:Random`!
