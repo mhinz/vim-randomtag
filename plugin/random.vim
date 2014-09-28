@@ -19,7 +19,7 @@ function! s:jump_to_random_tag() abort
   let lines    = len(tagfile)
   let line     = str2nr(matchstr(reltimestr(reltime()), '\v\.@<=\d+')[1:]) % lines
   let tagline  = tagfile[line]
-  execute '0tag' substitute(tagline, '^\(.\{-}\)\t.*', '\=submatch(1)', '')
+  execute 'help' substitute(tagline, '^\(.\{-}\)\t.*', '\=submatch(1)', '')
   let &tags    = tagssave
 endfunction
 
