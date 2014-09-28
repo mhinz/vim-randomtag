@@ -9,18 +9,26 @@ if exists('g:loaded_random') || &compatible
 endif
 let g:loaded_random = 1
 
-function! s:jump_to_random_tag() abort
+function! s:get_random_tag() abort
   let tagssave = &tags
   let &tags    = $VIMRUNTIME .'/doc/tags'
+
   if !filereadable(&tags)
     execute 'helptags' fnamemodify(&tags, ':h')
   endif
+
   let tagfile  = readfile(&tags)
-  let lines    = len(tagfile)
-  let line     = str2nr(matchstr(reltimestr(reltime()), '\v\.@<=\d+')[1:]) % lines
+  let nlines   = len(tagfile)
+  let line     = str2nr(matchstr(reltimestr(reltime()), '\v\.@<=\d+')[1:]) % nlines
   let tagline  = tagfile[line]
-  execute 'help' substitute(tagline, '^\(.\{-}\)\t.*', '\=submatch(1)', '')
+  let tag      = substitute(tagline, '^\(.\{-}\)\t.*', '\=submatch(1)', '')
   let &tags    = tagssave
+
+  return tag
+endfunction
+
+function! s:jump_to_random_tag() abort
+  execute 'help' s:get_random_tag()
 endfunction
 
 command! -nargs=0 -bar Random call s:jump_to_random_tag()
