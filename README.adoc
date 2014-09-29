@@ -5,3 +5,15 @@ Learn something new about Vim every day by jumping to random tags from help file
 === Amazing! How do I use it?
 
 Easy-peasy! Just run `:Random` for built-in tags. `:Random!` also parses the `runtimepath` and includes tags from external plugins.
+
+=== Typical workflow
+
+```vim
+:Random!
+@:
+@@
+@@
+@@
+```
+
+You get the idea.
