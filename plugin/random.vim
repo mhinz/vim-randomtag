@@ -16,7 +16,7 @@ endfunction
 function! s:get_internal_tags_file() abort
   let tags_file_path = $VIMRUNTIME .'/doc/tags'
   if !filereadable(tags_file_path)
-    execute 'helptags' fnamemodify($VIMRUNTIME .'/doc/tags', ':h')
+    execute 'helptags' fnamemodify(tags_file_path, ':h')
   endif
   return tags_file_path
 endfunction
