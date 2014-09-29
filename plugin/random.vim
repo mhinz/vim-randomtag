@@ -9,26 +9,44 @@ if exists('g:loaded_random') || &compatible
 endif
 let g:loaded_random = 1
 
-function! s:get_random_tag() abort
-  let tagssave = &tags
-  let &tags    = $VIMRUNTIME .'/doc/tags'
+function! s:get_random_number(max) abort
+  return str2nr(matchstr(reltimestr(reltime()), '\v\.@<=\d+')[1:]) % a:max
+endfunction
 
-  if !filereadable(&tags)
-    execute 'helptags' fnamemodify(&tags, ':h')
+function! s:get_internal_tags_file() abort
+  let tags_file_path = $VIMRUNTIME .'/doc/tags'
+  if !filereadable(tags_file_path)
+    execute 'helptags' fnamemodify($VIMRUNTIME .'/doc/tags', ':h')
+  endif
+  return tags_file_path
+endfunction
+
+function! s:get_external_tags_files() abort
+  let tags = filter(map(split(&runtimepath, ','), 'v:val . "doc/tags"'), 'filereadable(v:val)')
+  " Have at least one valid tags file.
+  if empty(tags)
+    call add($VIMRUNTIME ./doc/tags)
+  endif
+  return tags
+endfunction
+
+function! s:get_random_tag(bang) abort
+  let tags_save = &tags
+
+  if a:bang
+    let tags_paths     = s:get_external_tags_files()
+    let tags_file_path = tags_paths[s:get_random_number(len(tags_paths))]
+  else
+    let tags_file_path = s:get_internal_tags_file()
   endif
 
-  let tagfile  = readfile(&tags)
-  let nlines   = len(tagfile)
-  let line     = str2nr(matchstr(reltimestr(reltime()), '\v\.@<=\d+')[1:]) % nlines
-  let tagline  = tagfile[line]
-  let tag      = substitute(tagline, '^\(.\{-}\)\t.*', '\=submatch(1)', '')
-  let &tags    = tagssave
+  let &tags     = tags_file_path
+  let tags_file = readfile(tags_file_path)
+  let tags_line = tags_file[s:get_random_number(len(tags_file))]
+  let tag       = substitute(tags_line, '^\(.\{-}\)\t.*', '\=submatch(1)', '')
+  let &tags     = tags_save
 
   return tag
 endfunction
 
-function! s:jump_to_random_tag() abort
-  execute 'help' s:get_random_tag()
-endfunction
-
-command! -nargs=0 -bar Random call s:jump_to_random_tag()
+command! -nargs=0 -bang -bar Random execute 'help' s:get_random_tag(<bang>0)
