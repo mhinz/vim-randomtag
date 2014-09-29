@@ -26,8 +26,6 @@ function! s:get_external_tags_files() abort
 endfunction
 
 function! s:get_random_tag(bang) abort
-  let tags_save = &tags
-
   if a:bang
     let tags_paths = s:get_external_tags_files()
     " Have at least one valid tags file.
@@ -40,11 +38,9 @@ function! s:get_random_tag(bang) abort
     let tags_file_path = s:get_internal_tags_file()
   endif
 
-  let &tags     = tags_file_path
   let tags_file = readfile(tags_file_path)
   let tags_line = tags_file[s:get_random_number(len(tags_file))]
   let tag       = substitute(tags_line, '^\(.\{-}\)\t.*', '\=submatch(1)', '')
-  let &tags     = tags_save
 
   return tag
 endfunction
