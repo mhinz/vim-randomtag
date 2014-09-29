@@ -22,20 +22,20 @@ function! s:get_internal_tags_file() abort
 endfunction
 
 function! s:get_external_tags_files() abort
-  let tags = filter(map(split(&runtimepath, ','), 'v:val . "doc/tags"'), 'filereadable(v:val)')
-  " Have at least one valid tags file.
-  if empty(tags)
-    call add($VIMRUNTIME ./doc/tags)
-  endif
-  return tags
+  return filter(map(split(&runtimepath, ','), 'v:val . "doc/tags"'), 'filereadable(v:val)')
 endfunction
 
 function! s:get_random_tag(bang) abort
   let tags_save = &tags
 
   if a:bang
-    let tags_paths     = s:get_external_tags_files()
-    let tags_file_path = tags_paths[s:get_random_number(len(tags_paths))]
+    let tags_paths = s:get_external_tags_files()
+    " Have at least one valid tags file.
+    if empty(tags_paths)
+      let tags_file_path = s:get_internal_tags_file()
+    else
+      let tags_file_path = tags_paths[s:get_random_number(len(tags_paths))]
+    endif
   else
     let tags_file_path = s:get_internal_tags_file()
   endif
