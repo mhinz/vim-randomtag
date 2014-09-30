@@ -7,26 +7,29 @@
 if exists('g:autoloaded_random') || &compatible
   finish
 endif
-let g:autoloaded_random = 1
 
+" Function: random#tag {{{1
 function! random#tag(bang) abort
-  if a:bang
-    let paths = s:external_tagfiles()
-    let path  = empty(paths) ? s:default_tagfile() : paths[s:randnum(len(paths))]
-  else
-    let path  = s:default_tagfile()
+  let path = a:bang ? s:paths[s:randnum(s:npaths)] : s:default
+
+  if !get(s:cache, path)
+    let s:cache.path       = {}
+    let s:cache.path.lines = readfile(path)
+    let s:cache.path.len   = len(s:cache.path.lines)
   endif
 
-  let lines = readfile(path)
-  let line  = lines[s:randnum(len(lines))]
+  let line = s:cache.path.lines[s:randnum(s:cache.path.len)]
+  let tag  = substitute(line, '^\(.\{-}\)\t.*', '\=submatch(1)', '')
 
-  return substitute(line, '^\(.\{-}\)\t.*', '\=submatch(1)', '')
+  return tag
 endfunction
 
+" Function: s:randnum {{{1
 function! s:randnum(max) abort
   return str2nr(matchstr(reltimestr(reltime()), '\v\.@<=\d+')[1:]) % a:max
 endfunction
 
+" Function: s:default_tagfile {{{1
 function! s:default_tagfile() abort
   let path = $VIMRUNTIME .'/doc/tags'
   let dir  = fnamemodify(path, ':h')
@@ -38,6 +41,13 @@ function! s:default_tagfile() abort
   return path
 endfunction
 
-function! s:external_tagfiles() abort
-  return filter(map(split(&runtimepath, ','), 'v:val . "doc/tags"'), 'filereadable(v:val)')
-endfunction
+" Values {{{1
+let s:cache   = {}
+let s:default = s:default_tagfile()
+let s:paths   = filter(map(split(&runtimepath, ','), 'v:val . "doc/tags"'), 'filereadable(v:val)')
+if empty(s:paths)
+  let s:paths = s:default
+endif
+let s:npaths  = len(s:paths)
+
+let g:autoloaded_random = 1
