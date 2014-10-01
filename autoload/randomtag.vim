@@ -1,15 +1,15 @@
 " vim: et sw=2 sts=2
 
-" Plugin:      https://github.com/mhinz/vim-random
+" Plugin:      https://github.com/mhinz/vim-randomtag
 " Description: Jump to random tags.
 " Maintainer:  Marco Hinz <http://github.com/mhinz>
 
-if exists('g:autoloaded_random') || &compatible
+if exists('g:autoloaded_randomtag') || &compatible
   finish
 endif
 
-" Function: random#tag {{{1
-function! random#tag(bang) abort
+" Function: randomtag#tag {{{1
+function! randomtag#tag(bang) abort
   let path = a:bang ? s:paths[s:randnum(s:npaths)] : s:default
 
   if !get(s:cache, path)
@@ -50,4 +50,4 @@ if empty(s:paths)
 endif
 let s:npaths  = len(s:paths)
 
-let g:autoloaded_random = 1
+let g:autoloaded_randomtag = 1
