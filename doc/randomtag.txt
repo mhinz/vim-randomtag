@@ -1,0 +1,54 @@
+*randomtag.txt*  Jump to random tags.
+*randomtag*
+
+  vim-randomtag by Marco Hinz~
+
+  Twitter: https://twitter.com/_mhinz_
+  Github:  http://github.com/mhinz
+  IRC:     mhi^ (Freenode)
+>
+  If you use any of my plugins, please star them on github. It's a great way
+  of getting feedback and gives me the kick to put more time into their
+  development.
+
+  If you encounter any bugs or have feature requests, just open an issue
+  report on Github.
+
+  Thank you for flying mhi^ airlines. Get the Vim on!
+<
+==============================================================================
+
+Learn something new about Vim every day by jumping to random tags from help
+files!
+
+==============================================================================
+
+There are only two commands:
+>
+    :Random
+>
+This one jumps to a random tag from $VIMRUNTIME/doc/tags and generates it if
+needed.
+>
+    :Random!
+>
+Additionally, this one parses |'runtimepath'| and includes all tags files it
+can gather. Thus if you manage external plugins in ~/.vim/bundle/* and similar
+directories, these will be added, too.
+
+==============================================================================
+
+A typical workflow:
+>
+    :Random!
+    @:
+    @@
+    @@
+    @@
+<
+You get the idea.
+
+See |@:| and |@@|, if you didn't know these before.
+
+==============================================================================
+vim: tw=78
