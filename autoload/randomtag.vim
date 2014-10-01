@@ -34,8 +34,15 @@ function! s:default_tagfile() abort
   let path = $VIMRUNTIME .'/doc/tags'
   let dir  = fnamemodify(path, ':h')
 
-  if !filereadable(path) && filewritable(dir) == 2
-    execute 'helptags' dir
+  if !filereadable(path)
+    if filewritable(dir) == 2
+      execute 'helptags' dir
+    else
+      echohl ErrorMsg
+      echomsg 'Cannot write: '. path
+      echohl NONE
+      return
+    endif
   endif
 
   return path
