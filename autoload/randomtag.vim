@@ -51,7 +51,7 @@ endfunction
 " Values {{{1
 let s:cache   = {}
 let s:default = s:default_tagfile()
-let s:paths   = filter(map(split(&runtimepath, ','), 'v:val . "doc/tags"'), 'filereadable(v:val)')
+let s:paths   = filter(map(split(&runtimepath, ','), 'v:val . "/doc/tags"'), 'filereadable(v:val)')
 if empty(s:paths)
   let s:paths = [ s:default ]
 endif
